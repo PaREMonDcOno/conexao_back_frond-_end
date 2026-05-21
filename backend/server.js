@@ -13,6 +13,7 @@ const conexao = mysql.createConnection({
     port: 3306
 });
 
+
 conexao.connect((erro) => {
     if (erro) {
         console.error("Erro ", erro);
@@ -21,7 +22,24 @@ conexao.connect((erro) => {
         console.log("mysql conectado");
     }
 });
+app.post("alunos", (req, res) => {
+    const {nome,email, curso} = req.body;
+    const  sql = "INSERT INTO alunos (nome,email,curso) values (?,?,?)";
+    conexao.query(
+        sql,
+        [nome,email,curso],
+        (erro, resultado) => {
+            if (erro) {
+                console.log("erro", erro);
+                res.status(500).json(erro);
+            }else {
+                res.json(resultado);
+            }
+        }
+    )
+})
 
 app.listen(3001,() => {
     console.log("servidor rodando");
 });
+
